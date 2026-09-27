@@ -6,10 +6,12 @@ instead of the model's own guesses. Stock tools return a ready-to-use, honest
 message (including an apology when something is out of stock) so the agent
 relays facts instead of composing them from scratch.
 """
+import json
 import re
 
 from db import get_connection, get_product_row, inventory_for, serialize_product
 from models import ProductInfo, ProductStock, ProductSummary, SizeStock, SizeStockCheck
+from semantic_search import semantic_rerank
 
 _WORD_RE = re.compile(r"[a-z0-9]+")
 _VALID_SIZES = {"XS", "S", "M", "L", "XL", "XXL"}
@@ -31,36 +33,65 @@ def _searchable_text(row) -> str:
     )
 
 
-def search_products(query: str, limit: int = 8) -> list[ProductSummary]:
+async def search_products(query: str, limit: int = 8) -> list[ProductSummary]:
     """Search the Campus Customs catalogue for products matching a shopper's query.
 
-    Matches against product name, garment type, description, colors, and search
-    tags. Returns compact summaries (not full detail) ranked by relevance.
-    Returns an empty list if nothing matches — that means the shop genuinely
-    doesn't carry it, not that the search failed.
+    Matches by meaning as well as literal keywords — e.g. "something cozy for
+    game day" can surface hoodies/fleece even without those exact words, via an
+    LLM relevance pass over the catalogue (falls back to plain keyword overlap
+    if that pass fails, so this never breaks). Returns compact summaries (not
+    full detail) ranked by relevance. Returns an empty list if nothing matches
+    — that means the shop genuinely doesn't carry it, not that the search failed.
 
     Args:
         query: Shopper's search phrase, e.g. "navy hoodie" or "yale hockey gift".
         limit: Maximum number of results to return (default 8).
     """
     query_tokens = _tokenize(query)
-    if not query_tokens:
-        return []
 
     conn = get_connection()
     try:
         rows = conn.execute("SELECT * FROM catalogue").fetchall()
-        scored = []
-        for row in rows:
-            haystack_tokens = _tokenize(_searchable_text(row))
-            overlap = len(query_tokens & haystack_tokens)
-            if overlap == 0:
-                continue
-            scored.append((overlap, row))
-        scored.sort(key=lambda pair: pair[0], reverse=True)
 
+        # Deterministic keyword pass — cheap, always available, zero-cost baseline.
+        keyword_scored = []
+        for row in rows:
+            overlap = len(query_tokens & _tokenize(_searchable_text(row))) if query_tokens else 0
+            if overlap > 0:
+                keyword_scored.append((overlap, row["product_id"]))
+        keyword_scored.sort(key=lambda pair: pair[0], reverse=True)
+        keyword_ids = [pid for _, pid in keyword_scored]
+
+        # LLM semantic pass over the full catalogue — catches intent that shares
+        # no literal words with the query. Compact fields only, to keep it cheap.
+        candidates = [
+            {
+                "product_id": row["product_id"],
+                "name": row["name"],
+                "garment_type": row["garment_type"],
+                "colors": json.loads(row["colors"]),
+                "search_tags": json.loads(row["search_tags"]),
+            }
+            for row in rows
+        ]
+        semantic_ids = await semantic_rerank(query, candidates, limit=limit)
+
+        # Merge: semantic order first (it understands intent), then fill any
+        # remaining slots with keyword hits it missed, preserving keyword order.
+        merged_ids: list[str] = []
+        seen: set[str] = set()
+        for pid in semantic_ids + keyword_ids:
+            if pid not in seen:
+                merged_ids.append(pid)
+                seen.add(pid)
+        merged_ids = merged_ids[:limit]
+
+        row_by_id = {row["product_id"]: row for row in rows}
         results = []
-        for _, row in scored[:limit]:
+        for pid in merged_ids:
+            row = row_by_id.get(pid)
+            if row is None:
+                continue  # defensive: never trust an id that isn't really in the catalogue
             product = serialize_product(conn, row)
             results.append(
                 ProductSummary(

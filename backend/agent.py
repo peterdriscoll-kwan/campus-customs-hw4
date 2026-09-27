@@ -11,8 +11,6 @@ os.environ.setdefault("PYDANTIC_AI_NO_BANNER", "1")  # keep server logs clean
 from dataclasses import dataclass
 from pathlib import Path
 
-from dotenv import load_dotenv
-from openai import AsyncOpenAI
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIChatModel, OpenAIResponsesModel
 from pydantic_ai.providers.openai import OpenAIProvider
@@ -20,6 +18,7 @@ from pydantic_ai.usage import UsageLimits
 
 from audit import build_entries, log_error, append_audit
 from models import ChatAgentReply, ProductInfo, PublicUser
+from portkey_client import get_portkey_client
 from tools import check_size_stock, find_alternatives, get_product_info, get_stock, search_products
 
 # Loop limits (Problem 12): bounds how many model round-trips / tool calls one
@@ -57,9 +56,6 @@ def wants_smart_model(message: str) -> bool:
     return any(pattern in lowered for pattern in _SMART_MODEL_PATTERNS)
 
 
-load_dotenv(HERE.parent.parent / ".env")  # project root .env holds PORTKEY_API_KEY
-
-
 @dataclass
 class ChatDeps:
     """Per-request context injected into the agent — the "who's chatting, what are
@@ -74,16 +70,7 @@ class ChatDeps:
 
 
 def make_chat_agent(model_name: str = DEFAULT_MODEL) -> Agent:
-    key = os.getenv("PORTKEY_API_KEY")
-    if not key:
-        raise RuntimeError("PORTKEY_API_KEY is missing from the project .env")
-
-    client = AsyncOpenAI(
-        api_key=key,
-        base_url="https://api.portkey.ai/v1",
-        default_headers={"x-portkey-api-key": key, "x-portkey-provider": "openai"},
-    )
-    provider = OpenAIProvider(openai_client=client)
+    provider = OpenAIProvider(openai_client=get_portkey_client())
     # gpt-6-series reasoning models reject function tools on /v1/chat/completions
     # (confirmed live: 400 "Function tools with reasoning_effort are not supported
     # for gpt-6-astra... use /v1/responses"). The Responses API supports them, so
