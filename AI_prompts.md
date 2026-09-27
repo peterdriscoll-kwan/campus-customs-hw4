@@ -8,6 +8,8 @@ This file logs prompts and directions entered for the Homework 4 (Campus Customs
 - **Follow-up prompt:** Scenario details (React + Vite + TypeScript front end, Python FastAPI backend, PydanticAI agent, `data/campus_customs.db`, `data/products/`, style reference yalebulldogblue.com, one-problem-at-a-time workflow, public repo submission excluding db/images).
 - **Evidence of work:** Created and activated `Homework 4/.venv`; confirmed `data/campus_customs.db` and `data/products/` are in place.
 
+## Problem 1 — Prompt Log Setup
+
 - **Prompt submitted:** "I'd like to use Astra or Terra for the harder parts. First, create a file called AI_prompts.md, similar to Homework 3/AI_prompts.md: this will be the running log of what we do. Update as we go: put one section for each problem; include section number and title, at least one prompt I typed, and at least one follow-on prompt if needed and one sentence on what was lacking in the first prompt. My running site, db writes, and screenshots are the evidence - I do not need an extra proof essay."
 - **Follow-up prompt:** Confirmed exact model IDs — `gpt-5.6-astra` and `gpt-6-terra`.
 - **Decision recorded:** Default model is `gpt-5.6-luna`. Use `gpt-5.6-astra` or `gpt-6-terra` for harder agent steps; evidence entries stay to one sentence pointing at the site/db/screenshot, no separate proof essay.
