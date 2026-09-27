@@ -1,0 +1,110 @@
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--cc-white);
+  border: 1px solid var(--cc-silver);
+  border-radius: var(--cc-radius);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 39, 77, 0.06);
+  transition: transform 0.2s var(--cc-ease), box-shadow 0.2s var(--cc-ease);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--cc-shadow-lift);
+}
+
+.product-card__image-frame {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--cc-silver-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-card__image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s var(--cc-ease);
+}
+
+.product-card:hover .product-card__image-frame img {
+  transform: scale(1.06);
+}
+
+.product-card__urgency {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--cc-blue-900);
+  color: var(--cc-white);
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.product-card__body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.product-card__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cc-blue-800);
+}
+
+.product-card__description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #5a6470;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card__swatches {
+  display: flex;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.product-card__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.product-card__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+
+.product-card__price {
+  font-weight: 700;
+  color: var(--cc-blue-900);
+}
+
+.product-card__stock {
+  font-size: 0.78rem;
+  color: #2f7a3d;
+  font-weight: 600;
+}
+
+.product-card__stock--out {
+  color: #a33636;
+}

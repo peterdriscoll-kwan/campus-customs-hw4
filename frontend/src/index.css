@@ -1,0 +1,158 @@
+:root {
+  --cc-blue-900: #00274d;
+  --cc-blue-800: #00356b;
+  --cc-blue-700: #0f4c86;
+  --cc-gold: #c9a646;
+  --cc-gold-light: #e8d38f;
+  --cc-silver: #c8ccd1;
+  --cc-silver-light: #eef0f3;
+  --cc-ink: #1b2530;
+  --cc-white: #ffffff;
+  --cc-radius: 12px;
+  --cc-radius-lg: 18px;
+  --cc-shadow: 0 6px 20px rgba(0, 39, 77, 0.12);
+  --cc-shadow-lift: 0 16px 32px rgba(0, 39, 77, 0.18);
+  --cc-font-display: "Fraunces", "Georgia", serif;
+  --cc-font-body: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --cc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  font-family: var(--cc-font-body);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--cc-silver-light);
+  color: var(--cc-ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--cc-font-display);
+  letter-spacing: -0.01em;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--cc-font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cc-gold);
+  margin-bottom: 10px;
+}
+
+.page-title {
+  color: var(--cc-blue-800);
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  color: #4a5560;
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+.button-primary {
+  background: var(--cc-blue-800);
+  color: var(--cc-white);
+  border: none;
+  border-radius: var(--cc-radius);
+  padding: 12px 22px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s var(--cc-ease), transform 0.15s var(--cc-ease);
+}
+
+.button-primary:hover {
+  background: var(--cc-blue-700);
+  transform: translateY(-1px);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+}
+
+.button-gold {
+  background: var(--cc-gold);
+  color: var(--cc-blue-900);
+  border: none;
+  border-radius: var(--cc-radius);
+  padding: 12px 22px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s var(--cc-ease), transform 0.15s var(--cc-ease);
+}
+
+.button-gold:hover {
+  background: var(--cc-gold-light);
+  transform: translateY(-1px);
+}
+
+.button-gold:active {
+  transform: translateY(0);
+}
+
+/* Scroll-reveal motion primitive: elements start here, JS flips --visible via
+   the useReveal hook (IntersectionObserver) once they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s var(--cc-ease), transform 0.5s var(--cc-ease);
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

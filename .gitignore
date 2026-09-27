@@ -1,0 +1,18 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# real database and product images (not committed — see README for the data pack)
+data/
+
+# python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# node / frontend
+node_modules/
+dist/
+.vite/

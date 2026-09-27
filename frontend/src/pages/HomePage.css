@@ -1,0 +1,132 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.home__hero {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: var(--cc-radius);
+  box-shadow: var(--cc-shadow);
+  min-height: 360px;
+}
+
+.home__hero-media {
+  flex: 1 1 45%;
+  min-width: 0;
+}
+
+.home__hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.home__hero-content {
+  flex: 1 1 55%;
+  color: var(--cc-white);
+  background: linear-gradient(135deg, var(--cc-blue-900), var(--cc-blue-800));
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home__hero h1 {
+  font-size: 2.4rem;
+  margin: 0 0 16px;
+}
+
+.home__hero p {
+  max-width: 640px;
+  line-height: 1.6;
+  color: var(--cc-silver-light);
+  margin-bottom: 24px;
+}
+
+.home__hero-actions {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .home__hero {
+    flex-direction: column;
+  }
+
+  .home__hero-media {
+    min-height: 220px;
+  }
+}
+
+.home__highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.home__highlight-card {
+  background: var(--cc-white);
+  border: 1px solid var(--cc-silver);
+  border-radius: var(--cc-radius);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 39, 77, 0.06);
+  transition: transform 0.2s var(--cc-ease), box-shadow 0.2s var(--cc-ease), opacity 0.5s var(--cc-ease), transform 0.5s var(--cc-ease);
+}
+
+.home__highlight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--cc-shadow);
+}
+
+.home__highlight-icon {
+  display: inline-block;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.home__highlight-card h2 {
+  color: var(--cc-blue-800);
+  font-size: 1.1rem;
+  margin: 0 0 10px;
+}
+
+.home__highlight-card p {
+  margin: 0;
+  color: #4a5560;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.home__featured-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.home__featured-header h2 {
+  margin: 0;
+  color: var(--cc-blue-800);
+  font-size: 1.5rem;
+}
+
+.home__featured-link {
+  color: var(--cc-blue-800);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.home__featured-link:hover {
+  text-decoration: underline;
+}
+
+.home__featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
